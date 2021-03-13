@@ -43,7 +43,7 @@ export default {
   data: () => ({
     links: [
       {
-        icon: 'mdi-git', link: 'https://github.com/Polovkin',
+        icon: 'mdi-git', link: 'https://github.com/Polovkin/froz',
       },
       {
         icon: 'mdi-linkedin', link: 'https://www.linkedin.com/in/mikle-polovkin/',
