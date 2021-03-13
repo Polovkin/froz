@@ -1,75 +1,43 @@
 <template>
   <div>
     <v-data-table
-        :headers="headers"
+
+        :headers="headersData"
         :items="tableData"
         :items-per-page="10"
-        class="elevation-1"
+        class="elevation-1 mt-5"
         @click:row="handleClick"
     />
   </div>
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
+import {TYPES} from "@/types";
 
 export default {
   name: "Results",
   data() {
-    return {
-      headersPopular: [
-        {
-          text: 'Most popular packages',
-          align: 'start',
-          sortable: false,
-          value: 'name',
-        },
-        {text: 'Type', value: 'type'},
-        {text: 'Hits', value: 'hits'},
-      ],
-      headerPackage: [
-        {
-          text: 'TEST',
-          align: 'start',
-          sortable: false,
-          value: 'name',
-        },
-        {text: 'TEST', value: 'type'},
-        {text: 'TEST', value: 'hits'},
-      ]
-    }
+    return {}
   },
   computed: {
     ...mapState({
       type: s => s.type,
-      data: s => s.fetchedData
+      packageName: s => s.packageName
+    }),
+    ...mapGetters({
+      tableData: 'GET_DATA',
+      headersData: 'GET_HEADERS'
     }),
 
-    headers() {
-      switch (this.type) {
-        case 'popular':
-          return this.headersPopular
-        case 'test':
-          return this.headerPackage
-        default:
-          return this.headerPackage
-      }
-    },
-    tableData() {
-      switch (this.type) {
-        case 'popular':
-          return this.data
-        case 'test':
-          return this.data
-        default:
-          return this.data
-      }
-
-    },
   },
   methods: {
     handleClick(e) {
-      console.log(e)
+      if (this.type !== TYPES.POPULAR) {
+        const name = this.packageName + '@' + e.version
+        this.$store.dispatch('SEARCH_PACKAGE_DETAILS', {name, type: TYPES.PACKAGE_DETAILS})
+        this.$store.commit('SET_POPUP', {name, state: true})
+      }
     }
   },
 }

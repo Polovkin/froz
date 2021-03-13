@@ -19,7 +19,16 @@
             elevation="8"
             medium
             @click="submit"
-        >Search</v-btn>
+        >Search
+        </v-btn>
+        <v-btn
+
+            color="primary"
+            elevation="8"
+            medium
+            @click="popular"
+        >Most Popular
+        </v-btn>
       </v-card-actions>
     </div>
 
@@ -27,6 +36,9 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
+import {TYPES} from "@/types";
+
 export default {
   search: "Search",
   data() {
@@ -39,9 +51,12 @@ export default {
     }
   },
   mounted() {
-    this.$store.dispatch('FETCH_DATA',this.search)
+    this.$store.dispatch('FETCH_DATA', this.search)
   },
   computed: {
+    ...mapState({
+      error: s => s.errorMsg
+    }),
     form() {
       return {
         search: this.search,
@@ -49,6 +64,9 @@ export default {
     },
   },
   methods: {
+    popular() {
+      this.$store.dispatch('FETCH_DATA')
+    },
     submit() {
       this.formHasErrors = false
 
@@ -59,7 +77,12 @@ export default {
       })
 
       if (!this.formHasErrors) {
-        this.$store.dispatch('SEARCH_PACKAGE',this.search)
+        const packageName = this.search.split('@')
+        this.$store.dispatch('SEARCH_PACKAGE', {name: packageName[0], type: TYPES.PACKAGE})
+
+        if (packageName.length > 1) {
+          this.$store.dispatch('SEARCH_PACKAGE_DETAILS', {name: this.search, type: TYPES.PACKAGE})
+        }
       }
     },
   },

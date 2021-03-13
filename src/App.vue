@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <v-app-bar
-      app
-      color="primary"
-      dark
+        app
+        color="indigo"
+        dark
     >
-
+      Package search application
     </v-app-bar>
 
     <v-main>
